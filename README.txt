@@ -3,7 +3,7 @@ Source of our Steam data:
 
 <details>
 
-<summary> API reference: <summary>
+<summary> API reference: </summary>
 
 # Simple parse of the 'games.json' file.
 import os
@@ -93,4 +93,4 @@ tags = game['tags']                                 # Tags.
 for tag in tags:           
   tagKey = tag                                      # Tag key (string, int). 
 
-<details>
+</details>
