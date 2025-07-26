@@ -1,0 +1,21 @@
+# CMake build folders
+cmake-build-*/
+build/
+
+# CLion IDE config
+.idea/
+*.iml
+
+# Binary and object files
+*.o
+*.obj
+*.exe
+*.out
+*.a
+*.so
+*.dll
+*.dylib
+
+# System files
+.DS_Store
+Thumbs.db
