@@ -1,3 +1,4 @@
+#include <fstream>
 #include <iostream>
 #include <nlohmann/json.hpp>
 
@@ -5,6 +6,6 @@ using json = nlohmann::json;
 
 int main()
 {
-    std::cout << "Hello, World!" << std::endl;
+    std::ifstream("")
     return 0;
 }
