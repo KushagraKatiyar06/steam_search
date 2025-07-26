@@ -1,4 +1,3 @@
 # ninja log v6
-7	963	7752691454981269	build.ninja	51b76a7b2d4cf45a
-14	4167	7752687420068939	CMakeFiles/Steam_Search.dir/main.cpp.obj	448e39bb43bbfe93
-4168	5234	7752687461609888	Steam_Search.exe	ba8fbb0d700277ff
+3	1557	7752764013891372	CMakeFiles/Steam_Search.dir/main.cpp.obj	364a85e0bf09b53f
+1560	1954	7752764029453403	Steam_Search.exe	e82f72caa5d5e317
