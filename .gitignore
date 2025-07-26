@@ -1,22 +1,2 @@
-# CMake build folders
-/build/
-/cmake-build-debug/
-/out/
-
-# CLion IDE config
-.idea/
-*.iml
-
-# Binary and object files
-*.o
-*.obj
-*.exe
-*.out
-*.a
-*.so
-*.dll
-*.dylib
-
-# System files
-.DS_Store
-Thumbs.db
+/Steam_Search/cmake-build-debug/
+/Steam_Search/.idea/
