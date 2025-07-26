@@ -1,0 +1,3 @@
+C:/Users/bmmah/OneDrive/Documents/GitHub/steam_search/Steam_Search/cmake-build-debug/CMakeFiles/Steam_Search.dir
+C:/Users/bmmah/OneDrive/Documents/GitHub/steam_search/Steam_Search/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/bmmah/OneDrive/Documents/GitHub/steam_search/Steam_Search/cmake-build-debug/CMakeFiles/rebuild_cache.dir
