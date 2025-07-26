@@ -1,6 +1,7 @@
 # CMake build folders
-cmake-build-debug*/
-build/
+/build/
+/cmake-build-debug/
+/out/
 
 # CLion IDE config
 .idea/
