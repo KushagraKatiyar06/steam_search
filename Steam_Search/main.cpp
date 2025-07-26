@@ -9,6 +9,5 @@ int main()
     std::ifstream f("../steam_games.json");
     json data = json::parse(f);
     std::cout << data.size() << std::endl;
-    std::cout << "hey there" << std::endl;
     return 0;
 }
