@@ -4,12 +4,16 @@
 
 #include "Game.h"
 
-//Getters
+
+//Constructors
+Game::Game(){}
+
+//Getter
 int Game:: getID() const {
     return ID;
 }
 
-int Game:: getPrice() const {
+double Game:: getPrice() const {
     return price;
 }
 
@@ -33,7 +37,7 @@ vector<string> Game:: getDevelopers() const {
     return developers;
 }
 
-string Game:: getPublisher() const {
+vector<string> Game:: getPublisher() const {
     return publisher;
 }
 
@@ -45,19 +49,12 @@ vector<string> Game:: getGenres() const {
     return genres;
 }
 
-int Game :: getPositive() const {
-    return positive;
-}
 
-int Game :: getNegative() const {
-    return negative;
-}
-
-int Game:: getReviewScore() const {
+double Game:: getReviewScore() const {
     return reviewScore;
 }
 
-vector<string> Game :: getTags() const {
+unordered_map<string, int>Game :: getTags() const {
     return tags;
 }
 
@@ -66,7 +63,7 @@ void Game :: setID(int id){
     this->ID = id;
 }
 
-void Game:: setPrice(int price) {
+void Game:: setPrice(double price) {
     this->price = price;
 }
 
@@ -79,7 +76,12 @@ void Game:: setPlatform(vector<string> platform) {
 }
 
 void Game :: setMetacriticScore(int score) {
-    this->metacriticScore = score;
+    if (score == 0) {
+        this->metacriticScore = -1;
+    }
+    else {
+        this->metacriticScore = score;
+    }
 }
 
 void Game :: setSupportedLanguages(vector<string> supportedLanguages) {
@@ -94,32 +96,30 @@ void Game :: setDevelopers(vector<string> developers) {
     this->developers = developers;
 }
 
-void Game :: setPublisher(string publisher) {
-    this->publisher = publisher;
+void Game :: setPublisher(vector<string> publishers) {
+    this->publisher = publishers;
 }
 
 
 void Game :: setCategories (vector<string> categories) {
-    this->publisher = publisher;
+    this->categories = categories;
 }
 
 void Game:: setGenres(vector<string> genres) {
     this->genres = genres;
 }
 
-void Game :: setPositive(int positive) {
-    this->positive = positive;
+
+void Game :: setReviewScore(int positive, int negative) {
+    if (positive + negative == 0) {
+        this->reviewScore = -1.0;
+    }
+    else {
+        this->reviewScore = static_cast<double>(positive) / (positive + negative);
+    }
 }
 
-void Game :: setNegative(int negative) {
-    this->negative = negative;
-}
-
-void Game :: setReviewScore(int score) {
-    this->reviewScore = score;
-}
-
-void Game :: setTags(vector<string> tags) {
+void Game :: setTags(unordered_map<string, int> tags) {
     this->tags = tags;
 }
 

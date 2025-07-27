@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <string>
+#include <unordered_map>
 
 using namespace std;
 
@@ -16,7 +17,7 @@ private:
 
     //variables are in order based on order of the json
     int ID;
-    int price;
+    double price;
     int requiredAge;
 
     vector<string> platforms;
@@ -27,15 +28,14 @@ private:
     vector<string> fullAudioLanguages;
     vector<string> developers;
 
-    string publisher;
+    vector<string> publisher;
 
     vector<string> categories; //"Single-Player", "Multi-Player", etc.
     vector<string> genres; //"Casual", "Indie", etc
 
-    int positive, negative; //specific review scores
-    int reviewScore; //positive - negative
+    double reviewScore; //positive - negative
 
-    vector<string> tags;
+    unordered_map<string, int> tags;
 
 public:
     Game();
@@ -43,7 +43,7 @@ public:
     //Getters
     int getID() const ;
 
-    int getPrice() const;
+    double getPrice() const;
 
     int getRequiredAge () const;
 
@@ -57,24 +57,21 @@ public:
 
     vector<string> getDevelopers() const;
 
-    string getPublisher() const;
+    vector<string> getPublisher() const;
 
     vector<string> getCategories() const;
 
     vector<string> getGenres() const;
 
-    int getPositive() const;
 
-    int getNegative() const;
+    double getReviewScore() const;//returns the actual review score accounting for downvotes and upvotes
 
-    int getReviewScore() const;//returns the actual review score accounting for downvotes and upvotes
-
-    vector<string> getTags() const;
+    unordered_map<string, int> getTags() const;
 
     //Setters
     void setID(int id);
 
-    void setPrice(int price);
+    void setPrice(double price);
 
     void setRequiredAge(int age);
 
@@ -88,19 +85,15 @@ public:
 
     void setDevelopers(vector<string> developers);
 
-    void setPublisher(string publisher);
+    void setPublisher(vector<string> publisher);
 
     void setCategories(vector<string> categories);
 
     void setGenres(vector<string> genres);
 
-    void setPositive(int positive);
+    void setReviewScore(int positive, int negative);
 
-    void setNegative(int negative);
-
-    void setReviewScore(int score);
-
-    void setTags(vector<string> tags);
+    void setTags(unordered_map<string, int> tags);
 
     //methods
     int getTagCount();
