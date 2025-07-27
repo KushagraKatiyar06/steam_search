@@ -1,0 +1,17 @@
+"C:\Program Files (x86)\JetBrains\CLion 2024.2.0.1\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Steam_Search "-DCMAKE_MAKE_PROGRAM=C:/Program Files (x86)/JetBrains/CLion 2024.2.0.1/bin/ninja/win/x64/ninja.exe" -G Ninja -S C:\Users\bmmah\OneDrive\Documents\GitHub\steam_search\Steam_Search -B C:\Users\bmmah\OneDrive\Documents\GitHub\steam_search\Steam_Search\cmake-build-steam_search
+-- The C compiler identification is GNU 13.1.0
+-- The CXX compiler identification is GNU 13.1.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: C:/Program Files (x86)/JetBrains/CLion 2024.2.0.1/bin/mingw/bin/gcc.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: C:/Program Files (x86)/JetBrains/CLion 2024.2.0.1/bin/mingw/bin/g++.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Using the multi-header code from C:/Users/bmmah/OneDrive/Documents/GitHub/steam_search/Steam_Search/cmake-build-steam_search/_deps/json-src/include/
+-- Configuring done (4.1s)
+-- Generating done (0.0s)
+-- Build files have been written to: C:/Users/bmmah/OneDrive/Documents/GitHub/steam_search/Steam_Search/cmake-build-steam_search
