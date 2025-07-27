@@ -15,15 +15,16 @@ using namespace std;
 
  // map<int, string> int == game_id, string == name
 
-// TODO: implement fuzzy matching or other normalizer so users can find games like The Crew™ 2. They would type The Crew 2 and be prompted "did you mean The Crew™ 2." These names have special characters normal users won't be able to input.
+// TODO: STRING ISSUES implement fuzzy matching or other normalizer so users can find games like The Crew™ 2. They would type The Crew 2 and be prompted "did you mean The Crew™ 2." These names have special characters normal users won't be able to input.
 // also look into creating a drop down, as the user types in the name of their game the drop down gets shorter and shorter helping them hone in
-// TODO: make names case insensitive and whitsepace insensitive
-// TODO: string has issues with foreign characters, lines (3674, 43222, and more) of dataSet.txt good examples
+// TODO: STRING ISSUES make names case insensitive and whitsepace insensitive
+// TODO: STRING ISSUES string has issues with foreign characters, lines (3674, 43222, and more) of dataSet.txt good examples
 // for example its known that ® and ™ don't appear properly. We can also outright remove these characters by manipulating the json.
-// TODO: if a game has no tags make sure to use its genres instead (but we'll have no votes, set votes to -1)
+// TODO: TAG ISSUES if a game has no tags make sure to use its genres instead (but we'll have no votes, set votes to -1)
 
-// TODO: factor in the vote count of a tag wrt to the total votes of all tags for a game
+// TODO: JACCARDS factor in the vote count of a tag wrt to the total votes of all tags for a game
 // reasoning; don't want games punished for having users choose many tags but we still want the top tags to be most influential in the jaccards score
+// TODO: JACCARDS allow users to say "I don't want x y games included in the search"
 double jaccards(string& a, string& b, unordered_map<string, Game>& gameData)
 {
     const auto& tagsA = gameData[a].getTags();
