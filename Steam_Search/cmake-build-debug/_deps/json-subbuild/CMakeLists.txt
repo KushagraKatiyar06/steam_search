@@ -1,7 +1,7 @@
 # Distributed under the OSI-approved BSD 3-Clause License.  See accompanying
 # file Copyright.txt or https://cmake.org/licensing for details.
 
-cmake_minimum_required(VERSION 3.31.6)
+cmake_minimum_required(VERSION 3.29.6)
 
 # Reject any attempt to use a toolchain file. We must not use one because
 # we could be downloading it here. If the CMAKE_TOOLCHAIN_FILE environment
@@ -20,8 +20,8 @@ project(json-populate NONE)
 include(ExternalProject)
 ExternalProject_Add(json-populate
                      "UPDATE_DISCONNECTED" "False" "DOWNLOAD_EXTRACT_TIMESTAMP" "FALSE" "EXTERNALPROJECT_INTERNAL_ARGUMENT_SEPARATOR" "URL" "https://github.com/nlohmann/json/releases/download/v3.12.0/json.tar.xz"
-                    SOURCE_DIR          "C:/Users/Agnivesh Kaundinya/Desktop/steam_search/Steam_Search/cmake-build-debug/_deps/json-src"
-                    BINARY_DIR          "C:/Users/Agnivesh Kaundinya/Desktop/steam_search/Steam_Search/cmake-build-debug/_deps/json-build"
+                    SOURCE_DIR          "C:/Users/bmmah/OneDrive/Documents/GitHub/steam_search/Steam_Search/cmake-build-debug/_deps/json-src"
+                    BINARY_DIR          "C:/Users/bmmah/OneDrive/Documents/GitHub/steam_search/Steam_Search/cmake-build-debug/_deps/json-build"
                     CONFIGURE_COMMAND   ""
                     BUILD_COMMAND       ""
                     INSTALL_COMMAND     ""
