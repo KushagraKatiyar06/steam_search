@@ -3,7 +3,11 @@ project(Steam_Search)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(Steam_Search main.cpp)
+add_executable(Steam_Search main.cpp
+        UnorderedSetSC.cpp
+        UnorderedSetSC.h
+        UnorderedSetOA.cpp
+        UnorderedSetOA.h)
 
 include(FetchContent)
 
