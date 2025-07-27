@@ -5,9 +5,37 @@
 #ifndef UNORDEREDSETSC_H
 #define UNORDEREDSETSC_H
 
+
+#include <string>
+#include <functional>
+
+
 // Prime Number Helper for Separate Chaining
 static const int PRIMES[] = {7, 13, 31, 61, 127, 251, 509, 1021, 2039, 4093, 8191, 16381, 32749, 65521};
 static const int NUM_PRIMES = sizeof(PRIMES) / sizeof(PRIMES[0]);
+
+
+int getNextPrimeHelper(int n);
+
+// Hash Function Struct
+template <typename T>
+struct MyHasherSC { // Renamed to MyHasherSC to distinguish from OA version if both are used
+    unsigned int operator()(const T& key, int capacity) const;
+};
+
+// Explicit specialization declarations for int
+template <>
+struct MyHasherSC<int> {
+    unsigned int operator()(const int& key, int capacity) const;
+};
+
+// Explicit specialization declarations for std::string
+template <>
+struct MyHasherSC<std::string> {
+    unsigned int operator()(const std::string& key, int capacity) const;
+};
+
+
 
 template<typename T>
 class UnorderedSetSC {
@@ -31,7 +59,6 @@ private:
     // Private Helpers
     unsigned int hashFunction(const T& key) const;
     void resize(); // Helper to resize the hash table when the load factor exceeds maxLoadFactor.
-    int getNextPrime(int n) const;
     void deleteList(Node* head); // Helper to delete all nodes in a linked list starting from a given head.
 
 public:
@@ -49,7 +76,7 @@ public:
 
     // Utlility Functions
     double getLoadFactor() const;
-    // void printBuckets() const;
+    void printBuckets() const;
 };
 
 

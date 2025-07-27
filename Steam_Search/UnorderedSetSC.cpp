@@ -3,7 +3,7 @@
 //
 
 #include "UnorderedSetSC.h"
-#include <string>
+#include <iostream>
 
 // Helper
 int getNextPrimeHelper(int n) {
@@ -15,6 +15,19 @@ int getNextPrimeHelper(int n) {
     // Fallback if n is larger than the largest predefined prime.
     return PRIMES[NUM_PRIMES - 1];
 }
+
+
+// MyHasherSC implementation
+unsigned int MyHasherSC<int>::operator()(const int &key, int capacity) const {
+    return static_cast<unsigned int>(key) % capacity;
+}
+
+
+// MyHasherSC<std::string>
+unsigned int MyHasherSC<std::string>::operator()(const std::string &key, int capacity) const {
+    return std::hash<std::string>{}(key) % capacity;
+}
+
 
 // Constructor
 template<typename T>
@@ -42,7 +55,7 @@ UnorderedSetSC<T>::~UnorderedSetSC() {
 // Hash Function
 template<typename T>
 unsigned int UnorderedSetSC<T>::hashFunction(const T &key) const {
-    return static_cast<unsigned int>(key) % this->capacity; // modulo should be good enough
+    return MyHasherSC<T>()(key, this->capacity);
 }
 
 // Helper : Delete Linked List
@@ -182,8 +195,39 @@ double UnorderedSetSC<T>::getLoadFactor() const {
     return static_cast<double>(this->currSize) / this->capacity;
 }
 
+
+template<typename T>
+bool UnorderedSetSC<T>::isEmpty() const {
+    return this->currSize == 0;
+}
+
+
+template<typename T>
+void UnorderedSetSC<T>::printBuckets() const {
+    std::cout << "--- Hash Table (Separate Chaining) ---" << std::endl;
+    std::cout << "Capacity: " << capacity << ", Current Size: " << currSize << std::endl;
+    std::cout << "Load Factor: " << getLoadFactor() << std::endl;
+    for (int i = 0; i < capacity; ++i) {
+        std::cout << "[" << i << "]: ";
+        Node* current = table[i];
+        if (current == nullptr) {
+            std::cout << "empty" << std::endl;
+        } else {
+            while (current != nullptr) {
+                std::cout << current->data; // This assumes T can be printed with << operator
+                current = current->next;
+                if (current != nullptr) {
+                    std::cout << " -> ";
+                }
+            }
+            std::cout << std::endl;
+        }
+    }
+    std::cout << "--------------------------------------" << std::endl;
+}
+
+
 template class UnorderedSetSC<int>;
-template class UnorderedSetSC<double>;
 template class UnorderedSetSC<std::string>;
 
 
