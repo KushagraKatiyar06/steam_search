@@ -30,12 +30,32 @@ struct GameData {
 // TODO: implement fuzzy matching or other normalizer so users can find games like The Crew™ 2. They would type The Crew 2 and be prompted "did you mean The Crew™ 2." These names have special characters normal users won't be able to input.
 // TODO: string has issues with foreign characters, lines (3674, 43222, and more) of dataSet.txt good examples
 
-double jaccards()
+/*TODO: make sure to implement later
+*double jaccards(string& a, string& b, unordered_map<string, GameData>& gameData)
 {
-    // .getTotalTags(); -> return number of all the tags a game has
-    // .getTags(); -> return container pair<string, int> of all the tags the game along with the votes it has
-    
-}
+    // .getTags returns a container of pair<string, int> listing all of the tags and votes they have for a game
+    // .getTotalTags return an int of the total number of tags a game has
+
+    const auto& tagsA = gameData[a].getTags();
+    const auto& tagsB = gameData[b].getTags();
+
+    int intersection = 0;
+
+    for (const auto& [tag, votes] : tagsA) {
+        if (tagsB.contains(tag)) {
+            intersection++;
+        }
+    }
+
+    int totalTagsA = gameData[a].getTotalTags();
+    int totalTagsB = gameData[b].getTotalTags();
+
+    int union = totalTagsA + totalTagsB - intersection;
+
+    if (union == 0) {return 0.0};
+
+    return static_cast<double>(intersection) / unionSize;
+}*/
 
 int main()
 {
