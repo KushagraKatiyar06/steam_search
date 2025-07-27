@@ -1,5 +1,0 @@
-"C:\Program Files (x86)\JetBrains\CLion 2024.2.0.1\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Steam_Search "-DCMAKE_MAKE_PROGRAM=C:/Program Files (x86)/JetBrains/CLion 2024.2.0.1/bin/ninja/win/x64/ninja.exe" -G Ninja -S C:\Users\bmmah\OneDrive\Documents\GitHub\steam_search\Steam_Search -B C:\Users\bmmah\OneDrive\Documents\GitHub\steam_search\Steam_Search\cmake-build-steam_search
--- Using the multi-header code from C:/Users/bmmah/OneDrive/Documents/GitHub/steam_search/Steam_Search/cmake-build-steam_search/_deps/json-src/include/
--- Configuring done (2.0s)
--- Generating done (0.0s)
--- Build files have been written to: C:/Users/bmmah/OneDrive/Documents/GitHub/steam_search/Steam_Search/cmake-build-steam_search
