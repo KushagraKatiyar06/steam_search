@@ -30,6 +30,13 @@ struct GameData {
 // TODO: implement fuzzy matching or other normalizer so users can find games like The Crew™ 2. They would type The Crew 2 and be prompted "did you mean The Crew™ 2." These names have special characters normal users won't be able to input.
 // TODO: string has issues with foreign characters, lines (3674, 43222, and more) of dataSet.txt good examples
 
+double jaccards()
+{
+    // .getTotalTags(); -> return number of all the tags a game has
+    // .getTags(); -> return container pair<string, int> of all the tags the game along with the votes it has
+    
+}
+
 int main()
 {
     ifstream f("../steam_games.json"); // use ../steam_games_less.json for testing runs
