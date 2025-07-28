@@ -1,19 +1,17 @@
 #include <fstream>
 #include <iostream>
-#include <map>
-#include <set>
 #include <string>
-#include <unordered_set>
 #include <unordered_map>
 #include <queue>
 #include <nlohmann/json.hpp>
 #include "Game.h"
 
+#include "readJson.h"
+#include "jaccardsSimilarity.h"
+
 
 using json = nlohmann::json;
 using namespace std;
-
- // map<int, string> int == game_id, string == name
 
 // TODO: implement fuzzy matching or other normalizer so users can find games like The Crew™ 2. They would type The Crew 2 and be prompted "did you mean The Crew™ 2." These names have special characters normal users won't be able to input.
 // also look into creating a drop down, as the user types in the name of their game the drop down gets shorter and shorter helping them hone in
@@ -24,6 +22,8 @@ using namespace std;
 
 // TODO: factor in the vote count of a tag wrt to the total votes of all tags for a game
 // reasoning; don't want games punished for having users choose many tags but we still want the top tags to be most influential in the jaccards score
+
+/*
 double jaccards(string& a, string& b, unordered_map<string, Game>& gameData)
 {
     const auto& tagsA = gameData[a].getTags();
@@ -49,6 +49,9 @@ double jaccards(string& a, string& b, unordered_map<string, Game>& gameData)
     return static_cast<double>(intersection) / myUnion;
 }
 
+*/
+
+/*
 void readJson(json& dataJSON, unordered_map<string, Game>& allGames) {
 
     for (const auto& [game_id, game_info] : dataJSON.items()) {
@@ -135,6 +138,7 @@ void readJson(json& dataJSON, unordered_map<string, Game>& allGames) {
     }
 }
 
+*/
 int main()
 {
     ifstream f("../steam_games.json"); // use ../steam_games_less.json for testing runs
@@ -172,14 +176,14 @@ int main()
     }
 
     // jaccards test code
-    string source = "ELDEN RING";
+    string source = "Need for Speed™";
     string compare;
     priority_queue<pair<double, string>> maxHeap;
     for (const auto& [key, value] : decoder) {
-        if (value != "ELDEN RING") {
+        if (value != "Need for Speed™") {
             compare = value;
         }
-        maxHeap.emplace(jaccards(source, compare, metaData), value);
+        maxHeap.emplace(jaccardsSimilarity(source, compare, metaData), value);
     }
     for (int i = 0; i < 10 ; i++) {
         cout << maxHeap.top().first << " : " << maxHeap.top().second << endl;

@@ -6,7 +6,11 @@ set(CMAKE_CXX_STANDARD 20)
 add_executable(Steam_Search
                 main.cpp
                 Game.h
-                Game.cpp)
+                Game.cpp
+                readJson.h
+                readJson.cpp
+                jaccardsSimilarity.cpp
+                jaccardsSimilarity.h)
 
 include(FetchContent)
 
