@@ -12,28 +12,9 @@
 
 using namespace std;
 
-//Constructor - sets up map with all tags, and creates signatures for all games
-minHash:: minHash(const string& file, int n) {
-
-    //put tags in map
-    ifstream tagFile(file);
-    if (!tagFile.is_open()) {
-        cerr << "error in opening tag file" << endl;
-    }
-
-    string currentTag;
-    int index = 0;
-
-    while (getline(tagFile, currentTag)) {
-        indexedTags[currentTag] = index;
-        index++;
-    }
-
-
-    if (indexedTags.empty()) {
-        return;
-    }
-
+//Constructor - creates signatures for all games
+minHash:: minHash(int n, const unordered_map<string, int>& tags) {
+    this->indexedTags = tags;
     //create hash combinations
     vector<int> indicesBeforePermutations;
     for (int i = 0; i < indexedTags.size(); i++) {

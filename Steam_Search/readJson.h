@@ -15,4 +15,6 @@ using json = nlohmann::json;
 
 void readJson(json& dataJSON, std::unordered_map<std::string, Game>& allGames);
 
+unordered_map<string, int> readTags(const string& file);
+
 #endif //READJSON_H

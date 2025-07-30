@@ -20,7 +20,7 @@ private:
 
 public:
     //Constructor
-    minHash(const string& file, int n = 150); // will ta ke the tags.txt file and populate unique tags vector. also will initialize n hash functions
+    minHash(int n, const unordered_map<string, int>& indexedTags); // will ta ke the tags.txt file and populate unique tags vector. also will initialize n hash functions
 
     //Getters
     unordered_map<string,int> getIndexedTags();

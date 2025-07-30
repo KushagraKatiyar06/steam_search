@@ -4,8 +4,8 @@
 #include <unordered_map>
 #include <queue>
 #include <nlohmann/json.hpp>
-#include "Game.h"
 
+#include "Game.h"
 #include "readJson.h"
 #include "minHash.h"
 #include "jaccardsSimilarity.h"
@@ -146,21 +146,22 @@ int main()
     cout << "Prepping dataset, and preprocessing data for algorithms" << endl;
     ifstream f("../steam_games.json"); // use ../steam_games_less.json for testing runs
     json dataJSON = json::parse(f);
-    cout << dataJSON.size() << endl;
+    cout << dataJSON.size() << "\n" << endl;
 
     unordered_map<string, Game> metaData;
+    string tagFile = "../tags.txt";
+    unordered_map<string, int> indexedTags = readTags(tagFile);
     readJson(dataJSON, metaData);
 
-    //minhashnig pre prep
+    //minhashing preprep
     unordered_map<string, vector<int>> allSignatures;
-    minHash minHash("../tags.txt",150);
+    minHash minHash(150, indexedTags);
 
     for (const auto& pair : metaData) {
         const string& gameName = pair.first;
         const Game& game = pair.second;
         allSignatures[gameName] = minHash.createSignature(game);
     }
-
 
 /*
     // collect metrics - completed, don't need to rerun
@@ -192,11 +193,8 @@ int main()
         }
     }
 
-
-
     // jaccards test code
     cout << "Jaccards comparison" << endl;
-
 
     string source = "Need for Speed";
     string compare;
@@ -219,7 +217,7 @@ int main()
     //minHash test code
     cout << "\nMin hash algorithm: " << endl;
 
-    string source2 = "Need for Speed";
+    string source2 = "CarX Drift Racing Online";
     const vector<int>& sourceSignature = allSignatures[source2];
     priority_queue<pair<double,string>> similarGames;
 
