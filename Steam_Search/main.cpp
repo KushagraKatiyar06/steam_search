@@ -162,7 +162,8 @@ int main()
     }
 
 
-    /*// collect metrics - completed, don't need to rerun
+/*
+    // collect metrics - completed, don't need to rerun
     unordered_map<string, string> decoder;
     for (const auto& [game_id, game_info] : dataJSON.items()) { // iterates 111452 times (amount of games)
         for (const auto& [game_name, trash] : game_info["name"].items()) {
@@ -171,11 +172,14 @@ int main()
         }
     }
 
+
     // save to file
     ofstream outFile("../decoder.txt");
     for (const auto& [key, value] : decoder) {
         outFile << key << '\t' << value << '\n';
-    }*/
+    }
+    */
+
 
     // update decoder from file
     unordered_map<string, string> decoder;
@@ -189,11 +193,12 @@ int main()
     }
 
 
+
     // jaccards test code
     cout << "Jaccards comparison" << endl;
 
 
-    string source = "Need for Speed™";
+    string source = "Need for Speed";
     string compare;
     priority_queue<pair<double, string>> maxHeap;
     for (const auto& [key, value] : decoder) {
@@ -214,7 +219,7 @@ int main()
     //minHash test code
     cout << "\nMin hash algorithm: " << endl;
 
-    string source2 = "Need for Speed™";
+    string source2 = "Need for Speed";
     const vector<int>& sourceSignature = allSignatures[source2];
     priority_queue<pair<double,string>> similarGames;
 
