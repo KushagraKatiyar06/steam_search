@@ -13,6 +13,8 @@ add_executable(Steam_Search
                 jaccardsSimilarity.h
                 minHash.cpp
                 minHash.h
+        cosineSimilarity.cpp
+        cosineSimilarity.h
 )
 
 include(FetchContent)
