@@ -142,6 +142,8 @@ void readJson(json& dataJSON, unordered_map<string, Game>& allGames) {
 */
 int main()
 {
+
+    cout << "Prepping dataset, and preprocessing data for algorithms" << endl;
     ifstream f("../steam_games.json"); // use ../steam_games_less.json for testing runs
     json dataJSON = json::parse(f);
     cout << dataJSON.size() << endl;
@@ -187,8 +189,10 @@ int main()
     }
 
 
-    /*
     // jaccards test code
+    cout << "Jaccards comparison" << endl;
+
+
     string source = "Need for Speed™";
     string compare;
     priority_queue<pair<double, string>> maxHeap;
@@ -198,21 +202,25 @@ int main()
         }
         maxHeap.emplace(jaccardsSimilarity(source, compare, metaData), value);
     }
+
+    cout << "\nTop 10 most similar games:" << endl;
+    cout << "--------------------------" << endl;
     for (int i = 0; i < 10 ; i++) {
-        cout << maxHeap.top().first << " : " << maxHeap.top().second << endl;
+        cout << "Similarity: " << maxHeap.top().first << " | Game:  " << maxHeap.top().second << endl;
         maxHeap.pop();
     }
 
-    */
 
     //minHash test code
-    string source = "Need for Speed™";
-    const vector<int>& sourceSignature = allSignatures[source];
+    cout << "\nMin hash algorithm: " << endl;
+
+    string source2 = "Need for Speed™";
+    const vector<int>& sourceSignature = allSignatures[source2];
     priority_queue<pair<double,string>> similarGames;
 
     for (const auto& pair : allSignatures) {
         const string& compareGameName = pair.first;
-        if (compareGameName == source) {
+        if (compareGameName == source2) {
             continue;
         }
         const vector<int>& compareSignature = pair.second;
@@ -224,11 +232,9 @@ int main()
     cout << "--------------------------" << endl;
     for (int i = 0; i < 10 && !similarGames.empty(); ++i) {
         pair<double, string> top = similarGames.top();
-        cout << "Similarity: " << fixed << setprecision(3) << top.first
-             << "  |  Game: " << top.second << endl;
+        cout << "Similarity: " << top.first << "  |  Game: " << top.second << endl;
         similarGames.pop();
     }
-
 
 
     // pull tags from file
