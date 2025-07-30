@@ -7,6 +7,7 @@
 #include "Game.h"
 
 #include "readJson.h"
+#include "minHash.h"
 #include "jaccardsSimilarity.h"
 
 
@@ -146,8 +147,18 @@ int main()
     cout << dataJSON.size() << endl;
 
     unordered_map<string, Game> metaData;
-
     readJson(dataJSON, metaData);
+
+    //minhashnig pre prep
+    unordered_map<string, vector<int>> allSignatures;
+    minHash minHash("../tags.txt",150);
+
+    for (const auto& pair : metaData) {
+        const string& gameName = pair.first;
+        const Game& game = pair.second;
+        allSignatures[gameName] = minHash.createSignature(game);
+    }
+
 
     /*// collect metrics - completed, don't need to rerun
     unordered_map<string, string> decoder;
@@ -175,6 +186,8 @@ int main()
         }
     }
 
+
+    /*
     // jaccards test code
     string source = "Need for Speed™";
     string compare;
@@ -189,6 +202,33 @@ int main()
         cout << maxHeap.top().first << " : " << maxHeap.top().second << endl;
         maxHeap.pop();
     }
+
+    */
+
+    //minHash test code
+    string source = "Need for Speed™";
+    const vector<int>& sourceSignature = allSignatures[source];
+    priority_queue<pair<double,string>> similarGames;
+
+    for (const auto& pair : allSignatures) {
+        const string& compareGameName = pair.first;
+        if (compareGameName == source) {
+            continue;
+        }
+        const vector<int>& compareSignature = pair.second;
+        double similarity = minHash.miniJaccards(sourceSignature, compareSignature);
+        similarGames.emplace(similarity, compareGameName);
+    }
+
+    cout << "\nTop 10 most similar games:" << endl;
+    cout << "--------------------------" << endl;
+    for (int i = 0; i < 10 && !similarGames.empty(); ++i) {
+        pair<double, string> top = similarGames.top();
+        cout << "Similarity: " << fixed << setprecision(3) << top.first
+             << "  |  Game: " << top.second << endl;
+        similarGames.pop();
+    }
+
 
 
     // pull tags from file
