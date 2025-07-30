@@ -7,10 +7,14 @@
 
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
 
 #include "Game.h"
 
+using namespace std;
+
 double jaccardsSimilarity(string& a, string& b, unordered_map<string, Game>& gameData);
+double jaccardsSimilarityWeighted(string& a, string& b, unordered_map<string, Game>& gameData);
 
 
 

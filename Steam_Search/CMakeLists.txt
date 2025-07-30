@@ -10,7 +10,9 @@ add_executable(Steam_Search
                 readJson.h
                 readJson.cpp
                 jaccardsSimilarity.cpp
-                jaccardsSimilarity.h)
+                jaccardsSimilarity.h
+                algorithms_B.cpp
+                algorithms_B.h)
 
 include(FetchContent)
 
