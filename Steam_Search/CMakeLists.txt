@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.29)
+cmake_minimum_required(VERSION 3.29) # hey
 project(Steam_Search)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -22,3 +22,4 @@ FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download
 FetchContent_MakeAvailable(json)
 
 target_link_libraries(Steam_Search PRIVATE nlohmann_json::nlohmann_json)
+
