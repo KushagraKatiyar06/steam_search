@@ -97,7 +97,7 @@ int main()
         }
     }
     cout << "--- End of Multi-Feature Weighted Similarity Test ---" << endl;
-
+    /*
     // update decoder from file, this allows us to map gameIDs to gameNames for quick lookup
     unordered_map<string, string> decoder;
     ifstream inFile("../decoder.txt");
@@ -172,7 +172,9 @@ int main()
         }
         cout << "q - quit; m - print " << num_games << " more games; r - return to the main menu" << endl;
         cin >> response;
-    }*/
+    }
+
+    */
 
     return 0;
 }
