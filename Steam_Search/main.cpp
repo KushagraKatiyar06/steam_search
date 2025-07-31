@@ -22,35 +22,16 @@ using namespace std;
 
 // TODO: added supported language logic to all of our algorithms (if other game langs doesn't contain supported game langs) continue;
 
-// TODO: if a game has no tags make sure to use its genres instead (but we'll have no votes, set votes to -1)
-
-// TODO: factor in the vote count of a tag wrt to the total votes of all tags for a game
-// reasoning; don't want games punished for having users choose many tags but we still want the top tags to be most influential in the jaccards score
-
 int main()
 {
     ifstream f("../steam_games.json"); // use ../steam_games_less.json for testing runs
     json dataJSON = json::parse(f);
     cout << dataJSON.size() << endl;
+    string source;
 
     unordered_map<string, Game> metaData;
 
     readJson(dataJSON, metaData);
-
-    /*// collect metrics - completed, don't need to rerun
-    unordered_map<string, string> decoder;
-    for (const auto& [game_id, game_info] : dataJSON.items()) { // iterates 111452 times (amount of games)
-        for (const auto& [game_name, trash] : game_info["name"].items()) {
-            string name = to_string(trash).substr(1, to_string(trash).size()-2);
-            decoder[game_id] = name;
-        }
-    }
-
-    // save to file
-    ofstream outFile("../decoder.txt");
-    for (const auto& [key, value] : decoder) {
-        outFile << key << '\t' << value << '\n';
-    }*/
 
     // update decoder from file
     unordered_map<string, string> decoder;
@@ -65,16 +46,20 @@ int main()
 
 
     // decision tree test code
-    string source = "Stellaris";
+    /*source = "Stellaris";
     vector<string> rankings = decisionTree(source, metaData, decoder);
     for (int i = 0; i < 10; i++)
     {
         cout << rankings[i] << endl;
-    }
+    }*/
 
     // jaccards test code
-    /*
-    string source = "Shadows of Forbidden Gods";
+
+    cout << "Please input the game you'd like us to search: " << endl;
+    cin >> source;
+    cout << "How many games would you like displayed at a time: " << endl;
+    int num_games;
+    cin >> num_games;
     string compare;
     priority_queue<pair<double, string>> maxHeap;
     for (const auto& [key, value] : decoder) {
@@ -87,10 +72,22 @@ int main()
         }
         maxHeap.emplace(jaccardsSimilarityWeighted(source, compare, metaData), value);
     }
-    for (int i = 0; i < 10 ; i++) {
+    for (int i = 0; i < num_games ; i++) {
         cout << maxHeap.top().first << " : " << maxHeap.top().second << endl;
         maxHeap.pop();
-    }*/
+    }
+    cout << "q - quit; m - print " << num_games << " more games; r - return to the main menu" << endl;
+    string response;
+    cin >> response;
+    while (response == "m")
+    {
+        for (int i = 0; i < num_games ; i++) {
+            cout << maxHeap.top().first << " : " << maxHeap.top().second << endl;
+            maxHeap.pop();
+        }
+        cout << "q - quit; m - print " << num_games << " more games; r - return to the main menu" << endl;
+        cin >> response;
+    }
 
 
     // pull tags from file

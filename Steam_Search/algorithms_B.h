@@ -24,7 +24,7 @@ enum BucketLevel {
 };
 
 BucketLevel setBucket(string& selected, string& candidate, unordered_map<string, Game>& gameData, unordered_map<string, double> scores);
-vector<string> decisionTree(string& selected, unordered_map<string, Game>& gameData, unordered_map<string, string> decoder);
+vector<string> decisionTree(string& selected, unordered_map<string, Game>& gameData, unordered_map<string, string> decoder, int num_games = 10);
 
 
 #endif //ALGORITHMS_B_H
