@@ -195,7 +195,7 @@ int main()
         }
     }
 
-    string game = "The Elder Scrolls V: Skyrim";
+    string game = "Need for Speed Unbound";
 
     // jaccards test code
     cout << "Jaccards comparison" << endl;
