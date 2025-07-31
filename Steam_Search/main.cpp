@@ -4,10 +4,12 @@
 #include <unordered_map>
 #include <queue>
 #include <nlohmann/json.hpp>
-#include "Game.h"
 
+#include "Game.h"
 #include "readJson.h"
+#include "minHash.h"
 #include "jaccardsSimilarity.h"
+#include "cosineSimilarity.h"
 #include "multiFeatureSimilarity.h"
 #include "algorithms_B.h"
 
@@ -35,13 +37,25 @@ int main()
     json dataJSON = json::parse(f);
     cout << "Loaded " << dataJSON.size() << " games from JSON." << endl;
     string source;
-
+  
     unordered_map<string, Game> metaData;
     cout << "Calling readJson to populate game data..." << endl;
     readJson(dataJSON, metaData); // Populate your game data map
     cout << "Finished populating game data. Total games in metaData: " << metaData.size() << endl;
 
+    string tagFile = "../tags.txt";
+    unordered_map<string, int> indexedTags = readTags(tagFile);
 
+    //minhashing preprep
+    unordered_map<string, vector<int>> allSignatures;
+    minHash minHash(150, indexedTags);
+
+    for (const auto& pair : metaData) {
+        const string& gameName = pair.first;
+        const Game& game = pair.second;
+        allSignatures[gameName] = minHash.createSignature(game);
+    }
+  
     // --- Multi-Feature Weighted Similarity: Top 10 Games ---
     cout << "\n--- Multi-Feature Weighted Similarity: Top 10 Games ---" << endl;
 
@@ -86,7 +100,6 @@ int main()
             // Add to the priority queue
             topSimilarGames.emplace(similarity, compareGameName);
         }
-
         // Print the top 10 similar games
         cout << "\nTop 10 most similar games to '" << sourceGameName << "':" << endl;
         cout << "--------------------------" << endl;
@@ -108,14 +121,15 @@ int main()
             decoder[key] = value;
         }
     }
-
-    cout << "Please input the game you'd like us to search: " << endl;
+  
+     cout << "Please input the game you'd like us to search: " << endl;
     getline(cin >> std::ws, source);
     source.erase(source.find_last_not_of(" \t\r\n") + 1);
     cout << "How many games would you like displayed at a time: " << endl;
     int num_games;
     cin >> num_games;
     string response;
+
 
     // decision tree
     vector<string> rankings = decisionTree(source, metaData, decoder);
@@ -142,13 +156,14 @@ int main()
 
 
     // jaccards
-    /*string compare;
+    string compare;
     priority_queue<pair<double, string>> maxHeap;
     for (const auto& [key, value] : decoder) {
         if (value != source) {
+
             compare = value;
-        }
-        else
+        } 
+        else 
         {
             continue;
         }
@@ -172,7 +187,64 @@ int main()
         }
         cout << "q - quit; m - print " << num_games << " more games; r - return to the main menu" << endl;
         cin >> response;
-    }*/
+    }
+  
+    cout << "\nTop 10 most similar games:" << endl;
+    cout << "--------------------------" << endl;
+    for (int i = 0; i < 10 ; i++) {
+        cout << "Similarity: " << maxHeap.top().first << " | Game:  " << maxHeap.top().second << endl;
+        maxHeap.pop();
+    }
+
+
+    //minHash 
+    cout << "\nMin hash algorithm: " << endl;
+
+    string& source2 = game;
+    const vector<int>& sourceSignature = allSignatures[source2];
+    priority_queue<pair<double,string>> similarGames;
+
+    for (const auto& pair : allSignatures) {
+        const string& compareGameName = pair.first;
+        if (compareGameName == source2) {
+            continue;
+        }
+        const vector<int>& compareSignature = pair.second;
+        double similarity = minHash.miniJaccards(sourceSignature, compareSignature);
+        similarGames.emplace(similarity, compareGameName);
+    }
+
+    cout << "\nTop 10 most similar games:" << endl;
+    cout << "--------------------------" << endl;
+    for (int i = 0; i < 10 && !similarGames.empty(); ++i) {
+        pair<double, string> top = similarGames.top();
+        cout << "Similarity: " << top.first << "  |  Game: " << top.second << endl;
+        similarGames.pop();
+    }
+
+    // Cosine Similarity
+    cout << "\nCosine Similarity algorithm: " << endl;
+
+    cosineSimilarity cosineSim(indexedTags);
+    cosineSim.createGameSignatures(metaData);
+    priority_queue<pair<double, string>> cosineHeap;
+
+    for (const auto& pair : metaData) {
+        if (pair.first == game) {
+            continue;
+        }
+
+        double similarity = cosineSim.similarity(game, pair.first);
+        cosineHeap.emplace(similarity, pair.first);
+    }
+
+    cout << "\nTop 10 most similar games:" << endl;
+    cout << "--------------------------" << endl;
+    for (int i = 0; i < 10 && !cosineHeap.empty(); ++i) {
+        pair<double, string> top = cosineHeap.top();
+        cout << "Similarity: " << top.first << "  |  Game: " << top.second  << endl;
+        cosineHeap.pop();
+    }
 
     return 0;
 }

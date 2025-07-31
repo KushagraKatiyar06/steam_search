@@ -2,6 +2,8 @@
 // Created by kkati on 7/27/2025.
 //
 
+#include <fstream>
+#include <iostream>
 #include "readJson.h"
 
 using json = nlohmann::json;
@@ -92,7 +94,30 @@ void readJson(json& dataJSON, unordered_map<string, Game>& allGames) {
         int negative = game_info.value("negative", 0);
         allGames[name].setReviewScore(positive, negative);
     }
+}
 
+unordered_map<string, int> readTags(const string& file) {
+    unordered_map<string, int> indexedTags;
+
+    //put tags in map
+    ifstream tagFile(file);
+    if (!tagFile.is_open()) {
+        cerr << "error in opening tag file" << endl;
+    }
+
+    string currentTag;
+    int index = 0;
+
+    while (getline(tagFile, currentTag)) {
+        indexedTags[currentTag] = index;
+        index++;
+    }
+
+    if (indexedTags.empty()) {
+        return indexedTags;
+    }
+
+    return indexedTags;
 }
 
 // used for initally populating our decoder.txt, dataSet.txt, and tags.txt, LEGACY CODE
