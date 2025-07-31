@@ -12,7 +12,9 @@ add_executable(Steam_Search
                 jaccardsSimilarity.cpp
                 jaccardsSimilarity.h
                 multiFeatureSimilarity.cpp
-                multiFeatureSimilarity.h)
+                multiFeatureSimilarity.h
+                algorithms_B.cpp
+                algorithms_B.h)
 
 include(FetchContent)
 
