@@ -7,6 +7,7 @@
 
 #include <numeric>
 #include <set>
+#include <cmath> // For std::abs
 
 double calculateWeightedJaccard(
     const std::unordered_map<std::string, int>& tagsA,
@@ -36,9 +37,12 @@ double calculateWeightedJaccard(
         unionSum += std::max(weightA, weightB);
     }
 
-    if (unionSum == 0.0){return 0.0;}
+    if (unionSum == 0.0){
+        return 0.0;
+    }
 
-    return intersectionSum / unionSum;
+    double result = intersectionSum / unionSum;
+    return result;
 }
 
 double calculateJaccard(
@@ -59,10 +63,28 @@ double calculateJaccard(
 
     int unionSize = setA.size() + setB.size() - intersectionSize;
 
-    if (unionSize == 0){return 0.0;}
+    if (unionSize == 0){
+        return 0.0;
+    }
 
-    return static_cast<double>(intersectionSize) / unionSize;
+    double result = static_cast<double>(intersectionSize) / unionSize;
+    return result;
 }
+
+// function to calculate similarity based on review score
+// Review scores are typically normalized between 0 and 1.
+// Similarity is 1.0 - absolute difference.
+double calculateReviewScoreSimilarity(double scoreA, double scoreB) {
+    // If either score is -1.0 (indicating no review score), treat as 0 similarity to avoid
+    // comparing an unknown score, or handle as per specific business logic.
+    // For simplicity, if either is -1.0, we'll return 0.0 similarity for this feature.
+    if (scoreA < 0 || scoreB < 0) {
+        return 0.0;
+    }
+    // Scores are assumed to be normalized between 0.0 and 1.0
+    return 1.0 - std::abs(scoreA - scoreB);
+}
+
 
 double calculateOverallWeightedSimilarity(
     const Game& gameA,
@@ -70,31 +92,46 @@ double calculateOverallWeightedSimilarity(
     double weightTags,
     double weightPublishers,
     double weightDevelopers,
-    double weightGenres) {
+    double weightReviewScore) { // Changed from weightGenres to weightReviewScore
 
     double tagsSimilarity = calculateWeightedJaccard(gameA.getTags(), gameB.getTags());
 
-    std::set<std::string> publishersA(gameA.getPublisher().begin(), gameA.getPublisher().end());
-    std::set<std::string> publishersB(gameB.getPublisher().begin(), gameB.getPublisher().end());
-    double publishersSimilarity = calculateJaccard(publishersA, publishersB);
+    double publishersSimilarity = 0.0;
+    std::set<std::string> publishersA_set;
+    for (const auto& s : gameA.getPublisher()) {
+        publishersA_set.insert(s);
+    }
+    std::set<std::string> publishersB_set;
+    for (const auto& s : gameB.getPublisher()) {
+        publishersB_set.insert(s);
+    }
+    publishersSimilarity = calculateJaccard(publishersA_set, publishersB_set);
 
-    std::set<std::string> developersA(gameA.getDevelopers().begin(), gameA.getDevelopers().end());
-    std::set<std::string> developersB(gameB.getDevelopers().begin(), gameB.getDevelopers().end());
-    double developersSimilarity = calculateJaccard(developersA, developersB);
+    double developersSimilarity = 0.0;
+    std::set<std::string> developersA_set;
+    for (const auto& s : gameA.getDevelopers()) {
+        developersA_set.insert(s);
+    }
+    std::set<std::string> developersB_set;
+    for (const auto& s : gameB.getDevelopers()) {
+        developersB_set.insert(s);
+    }
+    developersSimilarity = calculateJaccard(developersA_set, developersB_set);
 
-    std::set<std::string> genresA(gameA.getGenres().begin(), gameA.getGenres().end());
-    std::set<std::string> genresB(gameB.getGenres().begin(), gameB.getGenres().end());
-    double genresSimilarity = calculateJaccard(genresA, genresB);
+    // Calculate Review Score Similarity instead of Genres Similarity
+    double reviewScoreSimilarity = calculateReviewScoreSimilarity(gameA.getReviewScore(), gameB.getReviewScore());
 
-    double totalWeight = weightTags + weightPublishers + weightDevelopers + weightGenres;
-
-    if (totalWeight == 0.0) {return 0.0;}
+    // Update totalWeight to include review score weight and exclude genre weight
+    double totalWeight = weightTags + weightPublishers + weightDevelopers + weightReviewScore;
+    if (totalWeight == 0.0) {
+        return 0.0;
+    }
 
     double overallSimilarity = (
         (tagsSimilarity * weightTags) +
         (publishersSimilarity * weightPublishers) +
         (developersSimilarity * weightDevelopers) +
-        (genresSimilarity * weightGenres)
+        (reviewScoreSimilarity * weightReviewScore) // Use reviewScoreSimilarity
     ) / totalWeight;
 
     return overallSimilarity;

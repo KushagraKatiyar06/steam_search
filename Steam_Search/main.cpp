@@ -141,40 +141,77 @@ void readJson(json& dataJSON, unordered_map<string, Game>& allGames) {
 */
 int main()
 {
-    ifstream f("../steam_games_less.json"); // use ../steam_games_less.json for testing runs
+    cout << "Prepping dataset, and preprocessing data for algorithms" << endl;
+    ifstream f("../steam_games.json"); // use ../steam_games_less.json for testing runs
+    // Check if the file opened successfully
+    if (!f.is_open()) {
+        cout << "Error: Could not open 'steam_games_less.json'. Please ensure the file exists and the path is correct." << endl;
+        return 1; // Exit the program if the file cannot be opened
+    }
     json dataJSON = json::parse(f);
-    cout << dataJSON.size() << endl;
+    cout << "Loaded " << dataJSON.size() << " games from JSON." << endl;
 
     unordered_map<string, Game> metaData;
+    cout << "Calling readJson to populate game data..." << endl;
+    readJson(dataJSON, metaData); // Populate your game data map
+    cout << "Finished populating game data. Total games in metaData: " << metaData.size() << endl;
 
-    readJson(dataJSON, metaData);
 
+    // --- Multi-Feature Weighted Similarity: Top 10 Games ---
+    cout << "\n--- Multi-Feature Weighted Similarity: Top 10 Games ---" << endl;
 
-    // Start of multi-Feature testing
-    cout << "\n --- Multi Feature Weighted Similarity Test ---" << endl;
+    string sourceGameName = "Marvel's Spider-Man 2"; // Choose  source game here
 
-    string gameNameA = "GalacticBowling";
-    string gameNameB = "Train Bandit";
+    // Check if the source game exists
+    if (metaData.count(sourceGameName) == 0) {
+        cout << "Error: Source game '" << sourceGameName << "' not found in dataset. Cannot perform similarity search." << endl;
+    } else {
+        const Game& sourceGame = metaData[sourceGameName];
 
-    if (metaData.count(gameNameA) == 0) {cout << "Doesn't exist." << endl;}
-    else if (metaData.count(gameNameB) == 0) {cout << "Doesn't exist." << endl;}
-    else{
-        const Game& gameA = metaData[gameNameA];
-        const Game& gameB = metaData[gameNameB];
+        // Define importance weights for the multi-feature algorithm
+        double weightTags = 0.5;
+        double weightPublishers = 0.1;
+        double weightDevelopers = 0.1;
+        double weightReviewScore = 0.3;
 
-        double weightTags = 0.4; // weights can be changed, but must add up to 1.0
-        double weightPublishers = 0.2;
-        double weightDevelopers = 0.2;
-        double weightGenres = 0.2;
+        cout << "\nFinding top 10 similar games to: '" << sourceGameName << "'" << endl;
+        cout << "Using Weights: Tags=" << weightTags << ", Publishers=" << weightPublishers
+             << ", Developers=" << weightDevelopers << ", Review Score=" << weightReviewScore << endl;
+        cout << "----------------------------------------------------" << endl;
 
-        cout << "\nComparing: '" << gameNameA << "' vs '" << gameNameB << "'" << endl;
-        cout << "Weights: Tags=" << weightTags << ", Publishers=" << weightPublishers
-             << ", Developers=" << weightDevelopers << ", Genres=" << weightGenres << endl;
+        // Max-heap to store (similarity, gameName) pairs, ordered by similarity (highest first)
+        priority_queue<pair<double, string>> topSimilarGames;
 
-        double similarityAB = calculateOverallWeightedSimilarity(gameA, gameB, weightTags, weightPublishers, weightDevelopers, weightGenres);
+        // Iterate through all other games in metaData
+        for (const auto& pair : metaData) {
+            const string& compareGameName = pair.first;
+            // Skip comparing the game with itself
+            if (compareGameName == sourceGameName) {
+                continue;
+            }
 
-        cout << "Overall weighted similarity (AB) = " << similarityAB << endl;
+            const Game& compareGame = pair.second;
+
+            // Calculate the overall weighted similarity
+            double similarity = calculateOverallWeightedSimilarity(
+                sourceGame, compareGame,
+                weightTags, weightPublishers, weightDevelopers, weightReviewScore
+            );
+
+            // Add to the priority queue
+            topSimilarGames.emplace(similarity, compareGameName);
+        }
+
+        // Print the top 10 similar games
+        cout << "\nTop 10 most similar games to '" << sourceGameName << "':" << endl;
+        cout << "--------------------------" << endl;
+        for (int i = 0; i < 10 && !topSimilarGames.empty(); ++i) {
+            pair<double, string> top = topSimilarGames.top();
+            cout << "Similarity: " << fixed << setprecision(4) << top.first << " | Game:  " << top.second << endl;
+            topSimilarGames.pop();
+        }
     }
+    cout << "--- End of Multi-Feature Weighted Similarity Test ---" << endl;
 
     /*// collect metrics - completed, don't need to rerun
     unordered_map<string, string> decoder;
