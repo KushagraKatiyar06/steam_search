@@ -15,7 +15,10 @@ add_executable(Steam_Search
                 minHash.h
                 cosineSimilarity.cpp
                 cosineSimilarity.h
-)
+                multiFeatureSimilarity.cpp
+                multiFeatureSimilarity.h
+                algorithms_B.cpp
+                algorithms_B.h)
 
 include(FetchContent)
 

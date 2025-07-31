@@ -9,6 +9,7 @@
 using json = nlohmann::json;
 using namespace std;
 
+// used each run for converting the data in steam_games.json into a manipulable object
 void readJson(json& dataJSON, unordered_map<string, Game>& allGames) {
 
     for (const auto& [game_id, game_info] : dataJSON.items()) {
@@ -117,4 +118,24 @@ unordered_map<string, int> readTags(const string& file) {
     }
 
     return indexedTags;
+}
+
+// used for initally populating our decoder.txt, dataSet.txt, and tags.txt, LEGACY CODE
+void collectMetrics(json& dataJSON, unordered_map<string, string>& decoder)
+{
+    for (const auto& [game_id, game_info] : dataJSON.items()) { // iterates 111452 times (amount of games)
+        for (const auto& [game_name, trash] : game_info["name"].items()) {
+            string name = to_string(trash).substr(1, to_string(trash).size()-2);
+            decoder[game_id] = name;
+        }
+    }
+}
+
+// used for initally populating our decoder.txt, dataSet.txt, and tags.txt, LEGACY CODE
+void saveToFile(unordered_map<string,string>& decoder)
+{
+    ofstream outFile("../decoder.txt");
+    for (const auto& [key, value] : decoder) {
+        outFile << key << '\t' << value << '\n';
+    }
 }
