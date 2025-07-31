@@ -4,12 +4,15 @@
 #include <unordered_map>
 #include <queue>
 #include <nlohmann/json.hpp>
+#include <rapidfuzz/fuzz.hpp>
+
 #include "Game.h"
 
 #include "readJson.h"
 #include "jaccardsSimilarity.h"
 #include "multiFeatureSimilarity.h"
 #include "algorithms_B.h"
+#include "RapidFuzzie.h"
 
 
 using json = nlohmann::json;
@@ -42,12 +45,21 @@ int main()
     cout << "Finished populating game data. Total games in metaData: " << metaData.size() << endl;
 
 
+    // RapidFuzzy implementation
+    RapidFuzzie fuzzie(metaData, 75.0);
+
+    // call function to get correct game name
+    string sourceGameName = fuzzie.getMatchedName();
+
+    if (sourceGameName.empty()) {
+        cout << "Invalid Name." << endl;
+        return 0;
+    }
+
     // --- Multi-Feature Weighted Similarity: Top 10 Games ---
     cout << "\n--- Multi-Feature Weighted Similarity: Top 10 Games ---" << endl;
 
-    string sourceGameName = "Marvel's Spider-Man 2"; // Choose  source game here
-
-    // Check if the source game exists
+    // Check if the source game exists (should after the fuzzy matching)
     if (metaData.count(sourceGameName) == 0) {
         cout << "Error: Source game '" << sourceGameName << "' not found in dataset. Cannot perform similarity search." << endl;
     } else {
@@ -97,6 +109,7 @@ int main()
         }
     }
     cout << "--- End of Multi-Feature Weighted Similarity Test ---" << endl;
+
     /*
     // update decoder from file, this allows us to map gameIDs to gameNames for quick lookup
     unordered_map<string, string> decoder;
