@@ -8,7 +8,7 @@
 
 #include "readJson.h"
 #include "jaccardsSimilarity.h"
-
+#include "multiFeatureSimilarity.h"
 
 using json = nlohmann::json;
 using namespace std;
@@ -141,13 +141,40 @@ void readJson(json& dataJSON, unordered_map<string, Game>& allGames) {
 */
 int main()
 {
-    ifstream f("../steam_games.json"); // use ../steam_games_less.json for testing runs
+    ifstream f("../steam_games_less.json"); // use ../steam_games_less.json for testing runs
     json dataJSON = json::parse(f);
     cout << dataJSON.size() << endl;
 
     unordered_map<string, Game> metaData;
 
     readJson(dataJSON, metaData);
+
+
+    // Start of multi-Feature testing
+    cout << "\n --- Multi Feature Weighted Similarity Test ---" << endl;
+
+    string gameNameA = "GalacticBowling";
+    string gameNameB = "Train Bandit";
+
+    if (metaData.count(gameNameA) == 0) {cout << "Doesn't exist." << endl;}
+    else if (metaData.count(gameNameB) == 0) {cout << "Doesn't exist." << endl;}
+    else{
+        const Game& gameA = metaData[gameNameA];
+        const Game& gameB = metaData[gameNameB];
+
+        double weightTags = 0.4; // weights can be changed, but must add up to 1.0
+        double weightPublishers = 0.2;
+        double weightDevelopers = 0.2;
+        double weightGenres = 0.2;
+
+        cout << "\nComparing: '" << gameNameA << "' vs '" << gameNameB << "'" << endl;
+        cout << "Weights: Tags=" << weightTags << ", Publishers=" << weightPublishers
+             << ", Developers=" << weightDevelopers << ", Genres=" << weightGenres << endl;
+
+        double similarityAB = calculateOverallWeightedSimilarity(gameA, gameB, weightTags, weightPublishers, weightDevelopers, weightGenres);
+
+        cout << "Overall weighted similarity (AB) = " << similarityAB << endl;
+    }
 
     /*// collect metrics - completed, don't need to rerun
     unordered_map<string, string> decoder;
