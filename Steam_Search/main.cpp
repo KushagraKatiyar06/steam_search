@@ -24,16 +24,16 @@ using namespace std;
 
 int main()
 {
-    ifstream f("../steam_games.json"); // use ../steam_games_less.json for testing runs
+    ifstream f("../steam_games_less.json"); // use ../steam_games_less.json for testing runs
     json dataJSON = json::parse(f);
-    cout << dataJSON.size() << endl;
+    cout << "done parsing JSON" << endl;
     string source;
 
     unordered_map<string, Game> metaData;
 
     readJson(dataJSON, metaData);
 
-    // update decoder from file
+    // update decoder from file, this allows us to map gameIDs to gameNames for quick lookup
     unordered_map<string, string> decoder;
     ifstream inFile("../decoder.txt");
     string line;
@@ -44,23 +44,40 @@ int main()
         }
     }
 
-
-    // decision tree test code
-    /*source = "Stellaris";
-    vector<string> rankings = decisionTree(source, metaData, decoder);
-    for (int i = 0; i < 10; i++)
-    {
-        cout << rankings[i] << endl;
-    }*/
-
-    // jaccards test code
-
     cout << "Please input the game you'd like us to search: " << endl;
-    cin >> source;
+    getline(cin >> std::ws, source);
+    source.erase(source.find_last_not_of(" \t\r\n") + 1);
     cout << "How many games would you like displayed at a time: " << endl;
     int num_games;
     cin >> num_games;
-    string compare;
+    string response;
+
+    // decision tree
+    vector<string> rankings = decisionTree(source, metaData, decoder);
+    int i;
+    for (i = 0; i < num_games; i++)
+    {
+        cout << rankings[i] << endl;
+    }
+    cout << "q - quit; m - print " << num_games << " more games; r - return to the main menu" << endl;
+    cin >> response;
+    while (response == "m")
+    {
+        if (i >= rankings.size())
+        {
+            cout << "No more games to display." << endl;
+        }
+        for (int j = 0; j < num_games && i < rankings.size(); j++, i++)
+        {
+            cout << rankings[i] << endl;
+        }
+        cout << "q - quit; m - print " << num_games << " more games; r - return to the main menu" << endl;
+        cin >> response;
+    }
+
+
+    // jaccards
+    /*string compare;
     priority_queue<pair<double, string>> maxHeap;
     for (const auto& [key, value] : decoder) {
         if (value != source) {
@@ -77,58 +94,20 @@ int main()
         maxHeap.pop();
     }
     cout << "q - quit; m - print " << num_games << " more games; r - return to the main menu" << endl;
-    string response;
     cin >> response;
     while (response == "m")
     {
+        if (maxHeap.empty())
+        {
+            cout << "No more games to display." << endl;
+        }
         for (int i = 0; i < num_games ; i++) {
             cout << maxHeap.top().first << " : " << maxHeap.top().second << endl;
             maxHeap.pop();
         }
         cout << "q - quit; m - print " << num_games << " more games; r - return to the main menu" << endl;
         cin >> response;
-    }
-
-
-    // pull tags from file
-    /*set<string> tags;
-    inFile.close();
-    inFile.open("../tags.txt");
-    line.clear();
-    while (getline(inFile, line)) {
-        tags.insert(line);
-    }
-
-
-    // populate the data map with empty sets
-    unordered_map<string, unordered_map<string, string>> data;
-    for (auto& element : tags) {
-        data[element] = unordered_map<string, string>();
-    }
-
-    // populate the empty sets
-    // TODO redo in the style of the readJson function
-    for (const auto& [game_id, game_info] : dataJSON.items()) { // iterates 111452 times (amount of games)
-        for (const auto& [tag_name, vote_count] : game_info["tags"].items()) {
-            for (const auto& [trash2, trash] : vote_count.items()) {
-                string votes = to_string(trash);
-                if (votes == "0") {
-                    continue;
-                }
-                data[tag_name][decoder[game_id]] = votes;
-                // cout << "data[" << tag_name << "][" << decoder[game_id] << "]" << " = " << votes << endl;
-            }
-        }
     }*/
-
-    // for (const auto& element : tags) {
-    //     cout << "----------" << element << "----------" << endl;
-    //     const auto& tag_data = data[element];
-    //     for (const auto& [game, votes] : tag_data) {
-    //         cout << game << ": " << votes << endl;
-    //     }
-    // }
-
 
     return 0;
 }

@@ -58,7 +58,7 @@ BucketLevel setBucket(string& selected, string& candidate, unordered_map<string,
 }
 
 // this function embodies the entire rule-based decision tree logic
-vector<string> decisionTree(string& selected, unordered_map<string, Game>& gameData, unordered_map<string, string> decoder, int num_games)
+vector<string> decisionTree(string& selected, unordered_map<string, Game>& gameData, unordered_map<string, string> decoder)
 {
     map<BucketLevel, vector<string>> buckets;
     unordered_map<string, int> tags = gameData[selected].getTags();
@@ -84,7 +84,7 @@ vector<string> decisionTree(string& selected, unordered_map<string, Game>& gameD
     unordered_map<string, double> scores;
     double maxScore = 0.0;
     int count = 0;
-    while (!maxHeap.empty() && count < num_games) {
+    while (!maxHeap.empty()) {
         auto [sim, candidate] = maxHeap.top();
         maxHeap.pop();
         if (candidate == selected)
