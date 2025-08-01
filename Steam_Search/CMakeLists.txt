@@ -11,6 +11,10 @@ add_executable(Steam_Search
                 readJson.cpp
                 jaccardsSimilarity.cpp
                 jaccardsSimilarity.h
+                minHash.cpp
+                minHash.h
+                cosineSimilarity.cpp
+                cosineSimilarity.h
                 multiFeatureSimilarity.cpp
                 multiFeatureSimilarity.h
                 algorithms_B.cpp
