@@ -6,6 +6,7 @@
 #define ALGORITHMS_B_H
 
 #include <algorithm>
+#include <chrono>
 #include <string>
 #include <vector>
 #include <map>
@@ -23,8 +24,22 @@ enum BucketLevel {
     LOW_RELEVANCE
 };
 
-BucketLevel setBucket(string& selected, string& candidate, unordered_map<string, Game>& gameData, unordered_map<string, double> scores);
-vector<string> decisionTree(string& selected, unordered_map<string, Game>& gameData, unordered_map<string, string> decoder);
+class algorithms_b
+{
+private:
+    priority_queue<pair<double, string>> savedHeap;
+    unordered_map<string, double> scores;
+    map<BucketLevel, vector<string>> buckets;
+    BucketLevel setBucket(string& selected, string& candidate, unordered_map<string, Game>& gameData, unordered_map<string, double> scores);
+public:
+    algorithms_b();
+    bool isHeapEmpty();
+    vector<string> decisionTree(string& selected, unordered_map<string, Game>& gameData, int num_games);
+    vector<string> decisionTreeNext(string& selected, unordered_map<string, Game>& gameData, int num_games);
+};
+
+
+
 
 
 #endif //ALGORITHMS_B_H
