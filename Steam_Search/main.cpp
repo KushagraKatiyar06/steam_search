@@ -23,7 +23,7 @@ using namespace std;
 // NOTICE: the CLI does not print foreign language characters correctly. Keep that in mind when there is input that
 // looks unintelligible. That is always an issue with the CLI. We already removed ™ ® © during preprocessing. But it
 // doesn't feel proper to replace accented characters or other foregin language characters from games, it's too
-// transformative. To account for this we implemented a fuzzy matching system so it shouldn't be a problem
+// transformative. To account for this we implemented a fuzzy matching system so it shouldn't be a problems
 
 int main()
 {
