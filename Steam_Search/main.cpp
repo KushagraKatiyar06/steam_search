@@ -4,6 +4,8 @@
 #include <unordered_map>
 #include <queue>
 #include <nlohmann/json.hpp>
+#include <rapidfuzz/fuzz.hpp>
+#include "Game.h"
 
 #include "Game.h"
 #include "readJson.h"
@@ -12,6 +14,7 @@
 #include "cosineSimilarity.h"
 #include "multiFeatureSimilarity.h"
 #include "algorithms_B.h"
+#include "RapidFuzzie.h"
 
 
 using json = nlohmann::json;
@@ -34,7 +37,7 @@ int main()
     json dataJSON = json::parse(f);
     cout << "Loaded " << dataJSON.size() << " games from JSON." << endl;
     string source;
-  
+
     unordered_map<string, Game> metaData;
     cout << "Calling readJson to populate game data..." << endl;
     readJson(dataJSON, metaData); // Populate your game data map
@@ -75,6 +78,7 @@ int main()
         cout << "How many games would you like displayed at a time: " << endl;
         int num_games;
         cin >> num_games;
+
 
         // declaring all varaibles used within the switch-case, needed as switches don't allow object declaration
         string compare;
@@ -264,69 +268,9 @@ int main()
             // TODO: make sure step through works (when you reach the end there aren't weird issues)
             cosineSim.createGameSignatures(metaData);
 
-<<<<<<< Updated upstream
-                    //minhashing preprep
-                    allSignatures.clear();
-
-                    for (const auto& pair : metaData) {
-                        const string& gameName = pair.first;
-                        const Game& game = pair.second;
-                        allSignatures[gameName] = minHash.createSignature(game);
-                    }
-
-                    sourceSignature = &allSignatures[source];
-                    // clears similarGames if necessary
-                    while(!similarGames.empty())
-                    {
-                        similarGames.pop();
-                    }
-                    for (const auto& pair : allSignatures) {
-                        const string& compareGameName = pair.first;
-                        if (compareGameName == source) {
-                            continue;
-                        }
-                        const vector<int>& compareSignature = pair.second;
-                        double similarity = minHash.miniJaccards(*sourceSignature, compareSignature);
-                        similarGames.emplace(similarity, compareGameName);
-                    }
-
-                    for (i = 0; i < num_games; ++i) {
-                        // TODO: zero extend the top.first so that formatting looks consistent
-                        cout << "Similarity: " << similarGames.top().first << "  |  Game: " << similarGames.top().second << endl;
-                        similarGames.pop();
-                    }
-                    cout << "q - quit; m - print " << num_games << " more games; r - return to the main menu" << endl;
-                    cin >> response;
-                    while (response == "m")
-                    {
-                        if (similarGames.empty())
-                        {
-                            cout << "No more games to display." << endl;
-                        }
-                        for (i = 0; i < num_games ; i++) {
-                            cout << "Similarity: " << similarGames.top().first << "  |  Game: " << similarGames.top().second << endl;
-                            similarGames.pop();
-                        }
-                        cout << "q - quit; m - print " << num_games << " more games; r - return to the main menu" << endl;
-                        cin >> response;
-                    }
-                break;
-
-            case 4: // Cosine Similarity
-                cosineSim.createGameSignatures(metaData);
-
-                for (const auto& pair : metaData) {
-                    if (pair.first == source) {
-                        continue;
-                    }
-
-                    double similarity = cosineSim.similarity(source, pair.first);
-                    cosineHeap.emplace(similarity, pair.first);
-=======
             for (const auto& pair : metaData) {
                 if (pair.first == source) {
                     continue;
->>>>>>> Stashed changes
                 }
 
                 double similarity = cosineSim.similarity(source, pair.first);
@@ -357,8 +301,6 @@ int main()
         case 5: // Multi-Feature Similarity
             // TODO: make sure step through works (when you reach the end there aren't weird issues)
             sourceGame = &metaData[source];
-
-
             cout << "\nFinding similar games to: '" << source << "'" << endl;
             cout << "Using Weights: Tags=" << weightTags << ", Publishers=" << weightPublishers << ", Developers=" << weightDevelopers << ", Review Score=" << weightReviewScore << endl;
             cout << "----------------------------------------------------" << endl;
@@ -417,12 +359,6 @@ int main()
             cout << "Invalid choice, exiting..." << endl;
             break;
         }
-<<<<<<< Updated upstream
-    }
-
-    return 0;
-=======
         return 0;
     }
->>>>>>> Stashed changes
 }
