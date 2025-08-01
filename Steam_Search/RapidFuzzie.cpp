@@ -72,7 +72,7 @@ string RapidFuzzie::getMatchedName() {
         if (bestScore >= similarityThreshold) {
             cout << "Did you mean '" << bestMatch << "'? [y/n]" << endl;
             string response;
-            cin >> response;
+            getline(cin, response);
             cin.ignore(numeric_limits<streamsize>::max(), '\n'); // flush leftover newline
 
             if (response == "y" || response == "Y")
