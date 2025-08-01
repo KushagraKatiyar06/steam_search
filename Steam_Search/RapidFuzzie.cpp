@@ -33,7 +33,6 @@ string RapidFuzzie::getMatchedName() {
         return "q";
     }
 
-
     if (allGameMetaData.contains(inputGN)) {
         success = true;
         return inputGN;

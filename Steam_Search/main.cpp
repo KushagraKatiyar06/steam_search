@@ -7,7 +7,6 @@
 #include <sstream>
 #include "Game.h"
 
-#include "Game.h"
 #include "readJson.h"
 #include "minHash.h"
 #include "jaccardsSimilarity.h"
