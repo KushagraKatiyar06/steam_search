@@ -71,6 +71,17 @@ int main()
             if (!source.empty()) {
                 invalid = false;
             }
+          
+          // RapidFuzzy implementation
+          RapidFuzzie fuzzie(metaData, 75.0);
+
+          // call function to get correct game name
+          string sourceGameName = fuzzie.getMatchedName();
+
+          if (sourceGameName.empty()) {
+              cout << "Invalid Name." << endl;
+              return 0;
+          }
         }
         cout << "What algorithm would you like for us to use: \n0 - Jaccard's Tag Similarity\n1 - Weighted Jaccard's Tag Similarity\n2 - Rule Based Decision Tree\n3 - Min Hashing\n4 - Cosine Similarity\n5 - Multi-Feature Similarity" << endl;
         int choice;

@@ -23,3 +23,5 @@ double calculateOverallWeightedSimilarity(const Game& gameA, const Game& gameB, 
 
 
 #endif //MULTIFEATURESIMILARITY_H
+
+// hey
