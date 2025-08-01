@@ -31,7 +31,7 @@ int main()
 {
     // TODO: if it's possible make this disappear from CLI when the prepping is done
     cout << "Prepping dataset, and preprocessing data for algorithms" << endl;
-    ifstream f("../steam_games.json"); // use ../steam_games_less.json for testing runs
+    ifstream f("../games.json"); // use ../games_less.json for testing runs
     // Check if the file opened successfully
     if (!f.is_open()) {
         cout << "Error: Could not open given JSON. Please ensure the file exists and the path is correct." << endl;
