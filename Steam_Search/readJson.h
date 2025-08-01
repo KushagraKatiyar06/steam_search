@@ -14,8 +14,8 @@
 
 using json = nlohmann::json;
 
-void readJson(json& dataJSON, std::unordered_map<std::string, Game>& allGames);
-void collectMetrics(json& dataJSON, unordered_map<string, string>& decoder);
+void readJson(json& dataJSON, std::unordered_map<std::string, Game>& allGames); //reads the json files and filled in every attribute for the Game objects.
+void collectMetrics(json& dataJSON, unordered_map<string, string>& decoder); //
 void saveToFile(unordered_map<string,string>& decoder);
 
 unordered_map<string, int> readTags(const string& file);
