@@ -8,6 +8,7 @@
 #include <string>
 #include <unordered_map>
 #include <fstream>
+#include <unordered_set>
 
 #include "Game.h"
 #include <nlohmann/json.hpp>

@@ -7,24 +7,38 @@
 #include<vector>
 #include <algorithm>
 #include <iomanip> // for precision setting
-#include <limits> // for std::numeric_limits
+#include <limits> // for numeric_limits
 #include <cctype> // for tolower
 
 #include <rapidfuzz/fuzz.hpp>
 
 // Constructor Initalizes values
-RapidFuzzie::RapidFuzzie(const std::unordered_map<std::string, Game> &metaData, double threshold) : allGameMetaData(metaData), similarityThreshold(threshold){}
+RapidFuzzie::RapidFuzzie(const unordered_map<string, Game> &metaData, double threshold) : allGameMetaData(metaData), similarityThreshold(threshold)
+{
+    success = false;
+}
 
-std::string RapidFuzzie::getMatchedName() {
-    cout << "Enter game name: ";
-    std::string inputGN;
-    std::getline(std::cin, inputGN); // read line of full game name
+bool RapidFuzzie::getSuccess()
+{
+    return success;
+}
+
+string RapidFuzzie::getMatchedName() {
+    cout << "Please input the game you'd like us to search: " << endl;
+    string inputGN;
+    getline(cin, inputGN); // read line of full game name
+    inputGN.erase(inputGN.find_last_not_of(" \t\r\n") + 1); // remove trailing or leading whitespace
+
+    if (allGameMetaData.contains(inputGN)) {
+        success = true;
+        return inputGN;
+    }
 
     // Normalize user input to lowercase
-    std::string normalizedInputGN = inputGN;
-    std::transform(normalizedInputGN.begin(), normalizedInputGN.end(), normalizedInputGN.begin(),[](unsigned char c){return std::tolower(c);}); // converts individual characters to lower
+    string normalizedInputGN = inputGN;
+    transform(normalizedInputGN.begin(), normalizedInputGN.end(), normalizedInputGN.begin(),[](unsigned char c){return tolower(c);}); // converts individual characters to lower
 
-    std::vector<std::string> allGameNames; // prepare a list of all the game names in the JSON
+    vector<string> allGameNames; // prepare a list of all the game names in the JSON
     for (const auto& pair : allGameMetaData) {
         allGameNames.push_back(pair.first);
     }
@@ -35,14 +49,14 @@ std::string RapidFuzzie::getMatchedName() {
 
     // Matching Logic
     double bestScore = -1.0; // this is the base value
-    std::string bestMatch;
+    string bestMatch;
     bool matchFound = false;
 
     // Iterate through all available names to find best match
-    for (const std::string& currChoice : allGameNames) {
+    for (const string& currChoice : allGameNames) {
         // normalize database game name
-        std::string normalizedCurrChoice = currChoice;
-        std::transform(normalizedCurrChoice.begin(), normalizedCurrChoice.end(), normalizedCurrChoice.begin(),[](unsigned char c){return std::tolower(c);}); // same transformation as for input
+        string normalizedCurrChoice = currChoice;
+        transform(normalizedCurrChoice.begin(), normalizedCurrChoice.end(), normalizedCurrChoice.begin(),[](unsigned char c){return tolower(c);}); // same transformation as for input
 
         // calculate similarity score
         double currScore = rapidfuzz::fuzz::ratio(normalizedInputGN, normalizedCurrChoice);
@@ -56,17 +70,26 @@ std::string RapidFuzzie::getMatchedName() {
 
     if (matchFound) {
         if (bestScore >= similarityThreshold) {
-            cout << "Did you mean '" << bestMatch << "'?" << endl;
-            return bestMatch;
+            cout << "Did you mean '" << bestMatch << "'? [y/n]" << endl;
+            string response;
+            cin >> response;
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // flush leftover newline
+
+            if (response == "y" || response == "Y")
+            {
+                success = true;
+                return bestMatch;
+            }
+            return "";
         }
         else {
             cout << "No matches close to or above similarity threshold" << endl;
+            return "";
         }
     }
     else {
         cout << "No matches in game directory" << endl;
         return "";
     }
-
+    return "";
 }
-
