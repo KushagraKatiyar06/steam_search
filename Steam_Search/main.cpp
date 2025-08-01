@@ -28,7 +28,7 @@ using namespace std;
 int main()
 {
     cout << "Prepping dataset, and preprocessing data for algorithms. This will take a while..." << endl;
-    ifstream f("../games_less.json"); // use ../games_less.json for testing runs
+    ifstream f("../games.json"); // use ../games_less.json for testing runs
     // Check if the file opened successfully
     if (!f.is_open()) {
         cout << "Error: Could not open given JSON. Please ensure the file exists and the path is correct." << endl;
@@ -45,6 +45,7 @@ int main()
     cout << "Calling readJson to populate game data..." << endl;
     readJson(dataJSON, metaData); // Populate your game data map
     cout << "\nFinished populating game data." << endl;
+
 
     string tagFile = "../tags.txt";
     unordered_map<string, int> indexedTags = readTags(tagFile);
@@ -369,7 +370,7 @@ int main()
                 const Game& compareGame = pair.second;
 
                 // Calculate the overall weighted similarity
-                double similarity = calculateOverallWeightedSimilarity(*sourceGame, compareGame, weightTags, weightPublishers, weightDevelopers, weightReviewScore, metaData, decoder);
+                double similarity = calculateOverallWeightedSimilarity(*sourceGame, compareGame, weightTags, weightPublishers, weightDevelopers, weightReviewScore);
 
                 // Add to the priority queue
                 topSimilarGames.emplace(similarity, compareGameName);
