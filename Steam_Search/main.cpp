@@ -30,11 +30,10 @@ using namespace std;
 
 // TODO: make names case insensitive and whitsepace insensitive
 
-int main()
-{
+int main() {
     // TODO: if it's possible make this disappear from CLI when the prepping is done
     cout << "Prepping dataset, and preprocessing data for algorithms" << endl;
-    ifstream f("../games.json"); // use ../games_less.json for testing runs
+    ifstream f("../games_less.json"); // use ../games_less.json for testing runs
     // Check if the file opened successfully
     if (!f.is_open()) {
         cout << "Error: Could not open given JSON. Please ensure the file exists and the path is correct." << endl;
@@ -81,16 +80,16 @@ int main()
                 invalid = false;
             }
           
-          // RapidFuzzy implementation
-          RapidFuzzie fuzzie(metaData, 75.0);
+            // RapidFuzzy implementation
+            RapidFuzzie fuzzie(metaData, 75.0);
 
-          // call function to get correct game name
-          string sourceGameName = fuzzie.getMatchedName();
+            // call function to get correct game name
+            string sourceGameName = fuzzie.getMatchedName();
 
-          if (sourceGameName.empty()) {
-              cout << "Invalid Name." << endl;
-              return 0;
-          }
+            if (sourceGameName.empty()) {
+                cout << "Invalid Name." << endl;
+                return 0;
+            }
         }
         cout << "What algorithm would you like for us to use: \n0 - Jaccard's Tag Similarity\n1 - Weighted Jaccard's Tag Similarity\n2 - Rule Based Decision Tree\n3 - Min Hashing\n4 - Cosine Similarity\n5 - Multi-Feature Similarity" << endl;
         int choice;
@@ -244,50 +243,50 @@ int main()
 
             case 3: // Min Hash
 
-                    //minhashing preprep
-                    allSignatures.clear();
+                //minhashing preprep
+                allSignatures.clear();
 
-                    for (const auto& pair : metaData) {
-                        const string& gameName = pair.first;
-                        const Game& game = pair.second;
-                        allSignatures[gameName] = minHash.createSignature(game);
+                for (const auto& pair : metaData) {
+                    const string& gameName = pair.first;
+                    const Game& game = pair.second;
+                    allSignatures[gameName] = minHash.createSignature(game);
+                }
+                sourceSignature = &allSignatures[source];
+                // clears similarGames if necessary
+                while(!similarGames.empty())
+                {
+                    similarGames.pop();
+                }
+                for (const auto& pair : allSignatures) {
+                    const string& compareGameName = pair.first;
+                    if (compareGameName == source) {
+                        continue;
                     }
-                    sourceSignature = &allSignatures[source];
-                    // clears similarGames if necessary
-                    while(!similarGames.empty())
+                    const vector<int>& compareSignature = pair.second;
+                    double similarity = minHash.miniJaccards(*sourceSignature, compareSignature);
+                    similarGames.emplace(similarity, compareGameName);
+                }
+
+                for (i = 0; i < num_games; ++i) {
+                    // TODO: zero extend the top.first so that formatting looks consistent
+                    cout << "Similarity: " << similarGames.top().first << "  |  Game: " << similarGames.top().second << endl;
+                    similarGames.pop();
+                }
+                cout << "q - quit; m - print " << num_games << " more games; r - return to the main menu" << endl;
+                cin >> response;
+                while (response == "m")
+                {
+                    if (similarGames.empty())
                     {
-                        similarGames.pop();
+                        cout << "No more games to display." << endl;
                     }
-                    for (const auto& pair : allSignatures) {
-                        const string& compareGameName = pair.first;
-                        if (compareGameName == source) {
-                            continue;
-                        }
-                        const vector<int>& compareSignature = pair.second;
-                        double similarity = minHash.miniJaccards(*sourceSignature, compareSignature);
-                        similarGames.emplace(similarity, compareGameName);
-                    }
-
-                    for (i = 0; i < num_games; ++i) {
-                        // TODO: zero extend the top.first so that formatting looks consistent
+                    for (i = 0; i < num_games ; i++) {
                         cout << "Similarity: " << similarGames.top().first << "  |  Game: " << similarGames.top().second << endl;
                         similarGames.pop();
                     }
                     cout << "q - quit; m - print " << num_games << " more games; r - return to the main menu" << endl;
                     cin >> response;
-                    while (response == "m")
-                    {
-                        if (similarGames.empty())
-                        {
-                            cout << "No more games to display." << endl;
-                        }
-                        for (i = 0; i < num_games ; i++) {
-                            cout << "Similarity: " << similarGames.top().first << "  |  Game: " << similarGames.top().second << endl;
-                            similarGames.pop();
-                        }
-                        cout << "q - quit; m - print " << num_games << " more games; r - return to the main menu" << endl;
-                        cin >> response;
-                    }
+                }
                 break;
 
             case 4: // Cosine Similarity
@@ -388,5 +387,6 @@ int main()
             cout << "Invalid choice, exiting..." << endl;
             break;
         }
-    return 0;
+        return 0;
+    }
 }

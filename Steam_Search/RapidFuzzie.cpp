@@ -53,53 +53,82 @@ string RapidFuzzie::getMatchedName() {
     }
 
     // Matching Logic
-    double bestScore = -1.0; // this is the base value
-    string bestMatch;
-    bool matchFound = false;
+    // Store all matches that meet the similarity threshold
+    std::vector<std::pair<double, std::string>> potentialMatches;
 
-    // Iterate through all available names to find best match
-    for (const string& currChoice : allGameNames) {
-        // normalize database game name
-        string normalizedCurrChoice = currChoice;
-        transform(normalizedCurrChoice.begin(), normalizedCurrChoice.end(), normalizedCurrChoice.begin(),[](unsigned char c){return tolower(c);}); // same transformation as for input
+    // Iterate through all available names to find matches
+    for (const std::string& currChoice : allGameNames) {
+        // Normalize database game name to lowercase
+        std::string normalizedChoice = currChoice;
+        std::transform(normalizedChoice.begin(), normalizedChoice.end(), normalizedChoice.begin(), [](unsigned char c){return tolower(c);});
 
-        // calculate similarity score
-        double currScore = rapidfuzz::fuzz::ratio(normalizedInputGN, normalizedCurrChoice);
+        // Calculate Similarity Scores
+        double currScore = rapidfuzz::fuzz::ratio(normalizedInputGN, normalizedChoice);
 
-        if (currScore > bestScore) {
-            bestScore = currScore;
-            bestMatch = currChoice;
-            matchFound = true;
+        // If the score meets the threshold, add to potential matches
+        if (currScore >= similarityThreshold) {
+            potentialMatches.push_back({currScore, currChoice});
         }
     }
 
-    if (matchFound) {
-        if (bestScore >= similarityThreshold) {
-            cout << "Did you mean '" << bestMatch << "'? [y/n]" << endl;
-            string response;
-            getline(cin, response);
+    // Sort matches by score in descending order
+    std::sort(potentialMatches.begin(), potentialMatches.end(), [](const auto& a, const auto& b) {return a.first > b.first;});
 
-            if (response == "y" || response == "Y") {
-                success = true;
-                return bestMatch;
+    // Define how many suggestions to print
+    int maxSuggestionSize = 3;
 
-            } else if (response == "n" || response == "N") {
-                success = false;
-                return "n";
-            } else {
-                cout << "Invalid input! Defaulting with option 'n'"<<endl; //edge case
-            }
+    if (!potentialMatches.empty()) {
+        std::cout << "\nDid you mean one of these?" << endl;
+        std::cout << "----------------------------" << endl;
+        std::string selectedGameName = ""; // to store final selection
 
-            return "";
+        for (int i = 0; i < potentialMatches.size() && i < maxSuggestionSize; i++) {
+            std::cout << (i + 1) << ". '" << potentialMatches[i].second << "' (Similarity: " << std::fixed << std::setprecision(2) << potentialMatches[i].first << "%)" << endl;
+        }
+
+        // Prompt user to select choice
+        std::cout << "----------------------------" << endl;
+        std::cout << "Enter the number of choice, or 0 to re-enter: ";
+        int choiceNum;
+        std::cin >> choiceNum;
+
+
+        // Process choice
+        if (choiceNum > 0 && choiceNum <= potentialMatches.size() && choiceNum <= maxSuggestionSize) {
+            selectedGameName = potentialMatches[choiceNum - 1].second;
+            success = true;
+            std::cout << "You selected: '" << selectedGameName << "'." << endl;
+            return selectedGameName;
+        }
+        else if (choiceNum == 0) {
+            std::cout << "Re-entering game name..." << std::endl;
+            success = false;
+            return getMatchedName();
         }
         else {
-            cout << "No matches close to or above similarity threshold" << endl;
-            return "";
+            std::cout << "Invalid choice Please re-enter a valid selection." << std::endl;
+            success = false;
+            return getMatchedName();
         }
     }
     else {
-        cout << "No matches in game directory" << endl;
-        return "";
+        // No matches found above similarity threshold
+        std::cout << "No close matches found for the input above " << std::fixed << std::setprecision(2) << similarityThreshold << "% similarity." << std::endl;
+        std::cout << "Please try again with a more accurate name." << std::endl;
+
+        // Offer to re-enter or return empty
+        std::cout << "Enter 0 to re-enter game now, or press any other key to exit: ";
+        int choiceNum;
+        std::cin >> choiceNum;
+
+
+        if (choiceNum == 0) {
+            success = false;
+            return getMatchedName();
+        }
+        else {
+            success = false;
+            return "";
+        }
     }
-    return "";
 }
