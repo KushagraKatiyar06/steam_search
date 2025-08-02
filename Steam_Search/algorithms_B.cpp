@@ -89,7 +89,11 @@ vector<string> algorithms_b::decisionTree(string& selected, unordered_map<string
     savedHeap = maxHeap;
 
     // here we're finding the maximum of the jaccards scores so we can normalize maxHeap before calling setBucket
-    double maxScore = 0.0;
+    if (maxHeap.top().second == selected)
+    {
+        maxHeap.pop();
+    }
+    double maxScore = maxHeap.empty() ? 0.0 : maxHeap.top().first;
     int count = 0;
     while (!maxHeap.empty()) {
         auto [sim, candidate] = maxHeap.top();
@@ -98,15 +102,9 @@ vector<string> algorithms_b::decisionTree(string& selected, unordered_map<string
         {
             continue;
         }
-        scores[candidate] = sim;
-        maxScore = max(maxScore, sim);
+        // now normalize the maxHeap (which has been transferred to scores container), also has some error handling
+        scores[candidate] = (maxScore > 0.0) ? (sim / maxScore) : 0.0;
         count++;
-    }
-
-    // now normalize the maxHeap (which has been transferred to scores container)
-    for (auto& [name, score] : scores) {
-        if (maxScore > 0)
-            score /= maxScore; // normalize, scale 0-1
     }
 
     // iterate through the candidates container and for each candidate decide which bucket it belongs in
