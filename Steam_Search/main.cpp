@@ -94,7 +94,6 @@ int main()
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
             continue;
         }
-
         //edge case
         if (choice < 0 || choice > 5) {
             cout << "\nInvalid choice (" << choice << "). Returning to main sequence...\n";
