@@ -27,8 +27,8 @@ using namespace std;
 
 int main()
 {
-    cout << "Prepping dataset, and preprocessing data for algorithms. This will take a while..." << endl;
-    ifstream f("../games.json"); // use ../games_less.json for testing runs
+    cout << "Prepping dataset, and preprocessing data for algorithms. Please wait..." << endl;
+    ifstream f("../games_less.json"); // use ../games_less.json for testing runs
     // Check if the file opened successfully
     if (!f.is_open()) {
         cout << "Error: Could not open given JSON. Please ensure the file exists and the path is correct." << endl;
@@ -42,7 +42,7 @@ int main()
     string source;
 
     unordered_map<string, Game> metaData;
-    cout << "Calling readJson to populate game data..." << endl;
+    cout << "\nCalling readJson to populate game data object..." << endl;
     readJson(dataJSON, metaData); // Populate your game data map
     cout << "\nFinished populating game data." << endl;
 
@@ -94,7 +94,6 @@ int main()
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
             continue;
         }
-
         //edge case
         if (choice < 0 || choice > 5) {
             cout << "\nInvalid choice (" << choice << "). Returning to main sequence...\n";
@@ -111,7 +110,10 @@ int main()
             cout << "Invalid number of games... Printing 1 game\n" << endl;
             num_games = 1;
         } //edge case
-
+        else
+        {
+            cout << "Please wait..." << endl;
+        }
 
         // declaring all varaibles used within the switch-case, needed as switches don't allow object declaration
         string compare;
