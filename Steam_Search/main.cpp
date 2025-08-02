@@ -28,7 +28,7 @@ using namespace std;
 int main()
 {
     cout << "Prepping dataset, and preprocessing data for algorithms. Please wait..." << endl;
-    ifstream f("../games.json"); 
+    ifstream f("../games.json");
     // Check if the file opened successfully
     if (!f.is_open()) {
         cout << "Error: Could not open given JSON. Please ensure the file exists and the path is correct." << endl;
