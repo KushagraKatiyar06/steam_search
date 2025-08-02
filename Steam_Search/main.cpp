@@ -28,7 +28,7 @@ using namespace std;
 int main()
 {
     cout << "Prepping dataset, and preprocessing data for algorithms. Please wait..." << endl;
-    ifstream f("../games_less.json"); // use ../games_less.json for testing runs
+    ifstream f("../games.json");
     // Check if the file opened successfully
     if (!f.is_open()) {
         cout << "Error: Could not open given JSON. Please ensure the file exists and the path is correct." << endl;
@@ -70,7 +70,6 @@ int main()
         while (invalid)
         {
             // RapidFuzzy implementation
-            // TODO: update getMatchedName() so that it returns a container of possible names instead of an individual name
             RapidFuzzie fuzzie(metaData, 75.0);
             // call function to get correct game name
             source = fuzzie.getMatchedName();
@@ -136,13 +135,9 @@ int main()
         double weightPublishers = 0.1;
         double weightDevelopers = 0.1;
         double weightReviewScore = 0.3;
-        // TODO: redo all of the ascii formatting so that CLI interface looks consistent across algos
         switch(choice)
         {
-            // TODO: decide whether to cut out scores entirely from output
-                // TODO: if keeping scores make sure to zero extend them so they're all the same length
         case 0: // Jaccards (unweighted)
-            // TODO: check for any bugs
             // clears maxHeap if necessary
                 while(!maxHeap.empty())
                 {
@@ -182,7 +177,6 @@ int main()
             break;
 
         case 1: // Jaccards (weighted)
-            // TODO: check for any bugs
             // clears maxHeap if necessary
                 while(!maxHeap.empty())
                 {
@@ -220,7 +214,6 @@ int main()
             break;
 
         case 2: // Decision Tree
-            // TODO: diagnose seg fault (happened when testing with games_less)
             rankings = DecisionTree.decisionTree(source, metaData, num_games);
             cout << "\n";
 
@@ -319,7 +312,6 @@ int main()
             break;
 
         case 4: // Cosine Similarity
-            // TODO: check for any bugs
             cosineSim.createGameSignatures(metaData);
 
             for (const auto& pair : metaData) {
